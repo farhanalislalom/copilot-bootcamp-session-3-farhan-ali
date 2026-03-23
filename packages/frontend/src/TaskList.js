@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import EventIcon from '@mui/icons-material/Event';
 
-function TaskList({ onEdit }) {
+function TaskList({ onEdit, onPriorityChange }) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -127,7 +127,7 @@ function TaskList({ onEdit }) {
           <ListItem 
             key={task.id} 
             sx={{ 
-              pr: 18,
+              pr: 28,
               py: 1,
               mb: 1,
               borderRadius: 2,
@@ -203,6 +203,18 @@ function TaskList({ onEdit }) {
                 gap: 1
               }}
             >
+              <Box display="flex" gap={0.5}>
+                {['P1', 'P2', 'P3'].map(p => (
+                  <button
+                    key={p}
+                    type="button"
+                    className={`priority-btn${task.priority === p ? ' selected' : ''}`}
+                    onClick={() => onPriorityChange && onPriorityChange(task, p)}
+                  >
+                    {p}
+                  </button>
+                ))}
+              </Box>
               {task.due_date && (
                 <Chip
                   icon={<EventIcon sx={{ fontSize: 14 }} />}

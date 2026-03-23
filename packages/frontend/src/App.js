@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './App.css';
 import { CssBaseline, Container, AppBar, Toolbar, Typography, Box } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import TaskList from './TaskList';
@@ -7,6 +8,20 @@ import TaskForm from './TaskForm';
 function App() {
   const [editingTask, setEditingTask] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  const handlePriorityChange = async (task, priority) => {
+    await fetch(`/api/tasks/${task.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: task.title,
+        description: task.description,
+        due_date: task.due_date,
+        priority
+      })
+    });
+    setRefreshKey(k => k + 1);
+  };
 
   const handleSave = async (task) => {
     if (editingTask) {
@@ -72,7 +87,7 @@ function App() {
             <TaskForm onSave={handleSave} initialTask={editingTask} />
           </Box>
           <Box sx={{ flexGrow: 1, minHeight: 0, overflow: 'hidden' }}>
-            <TaskList key={refreshKey} onEdit={setEditingTask} />
+            <TaskList key={refreshKey} onEdit={setEditingTask} onPriorityChange={handlePriorityChange} />
           </Box>
         </Container>
       </Box>
